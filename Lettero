@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ڕێکخستنەکان - Settings</title>
+  <style>
+    :root {
+      --bg-color: #f0f4f8;
+      --card-bg: #ffffff;
+      --text-color: #1a1a1a;
+      --subtext-color: #666666;
+      --primary-color: #007aff;
+      --border-color: #e5e5ea;
+    }
+
+    body.dark-mode {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #ffffff;
+      --subtext-color: #aaa;
+      --border-color: #333333;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .settings-container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .emoji-icon {
+      font-size: 24px;
+    }
+
+    .text-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .option-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .sub-text {
+      font-size: 12px;
+      color: var(--subtext-color);
+      margin-top: 2px;
+    }
+
+    /* Custom Switch Toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary-color);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    /* Colors Picker */
+    .color-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+
+    .color-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .color-box:hover {
+      transform: scale(1.1);
+    }
+
+    .color-box.active {
+      border: 3px solid var(--primary-color);
+    }
+
+    /* Language Grid */
+    .lang-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .lang-btn {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .lang-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="settings-container">
+    <div class="title">⚙️ ڕێکخستنەکان</div>
+
+    <!-- 1. Dark Mode Toggle Card -->
+    <div class="card">
+      <div class="row">
+        <div class="header-info">
+          <span class="emoji-icon" id="themeEmoji">☀️</span>
+          <div class="text-container">
+            <span class="option-title" id="themeText">دۆخی ڕووناک (Light Mode)</span>
+            <span class="sub-text">گۆڕینی ڕەنگی گشتی شاشەکە</span>
+          </div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 2. Custom Background Color Card -->
+    <div class="card" id="wallpaperCard">
+      <div class="header-info">
+        <span class="emoji-icon">🎨</span>
+        <span class="option-title">ڕەنگی پاشبنەما (Background Color)</span>
+      </div>
+      <div class="color-grid">
+        <div class="color-box active" style="background-color: #f0f4f8;" onclick="changeBg('#f0f4f8', this)"></div>
+        <div class="color-box" style="background-color: #ffffff;" onclick="changeBg('#ffffff', this)"></div>
+        <div class="color-box" style="background-color: #fff8dc;" onclick="changeBg('#fff8dc', this)"></div>
+        <div class="color-box" style="background-color: #e6f0fa;" onclick="changeBg('#e6f0fa', this)"></div>
+        <div class="color-box" style="background-color: #e8f5e9;" onclick="changeBg('#e8f5e9', this)"></div>
+        <div class="color-box" style="background-color: #fdedec;" onclick="changeBg('#fdedec', this)"></div>
+      </div>
+    </div>
+
+    <!-- 3. Language Selector Card -->
+    <div class="card">
+      <div class="header-info">
+        <span class="emoji-icon">🌐</span>
+        <span class="option-title">هەڵبژاردنی زمان (Language)</span>
+      </div>
+      <div class="lang-grid">
+        <button class="lang-btn active" onclick="selectLanguage('ku_sorani', this)">☀️ Kurdî (سۆرانی)</button>
+        <button class="lang-btn" onclick="selectLanguage('ku_kurmanji', this)">🏔️ Kurdî (Kurmancî)</button>
+        <button class="lang-btn" onclick="selectLanguage('ar', this)">🌙 العربية</button>
+        <button class="lang-btn" onclick="selectLanguage('en', this)">🌍 English</button>
+      </div>
+    </div>
+
+    <!-- 4. Alphabet Forms Toggle Card -->
+    <div class="card">
+      <div class="row">
+        <div class="header-info">
+          <span class="emoji-icon">🔤</span>
+          <div class="text-container">
+            <span class="option-title">شێوازە جیاوازەکانی پێت</span>
+            <span class="sub-text">نیشاندانی الحركات، سەرەتا، ناوەڕاست و کۆتایی</span>
+          </div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleDarkMode() {
+      const isDark = document.getElementById('darkModeToggle').checked;
+      const themeEmoji = document.getElementById('themeEmoji');
+      const themeText = document.getElementById('themeText');
+      const wallpaperCard = document.getElementById('wallpaperCard');
+
+      if (isDark) {
+        document.body.classList.add('dark-mode');
+        themeEmoji.innerText = '🌙';
+        themeText.innerText = 'دۆخی تاریک (Dark Mode)';
+        wallpaperCard.style.display = 'none'; // شاردنەوەی بەشی هەڵبژاردنی ڕەنگ لە دۆخی تاریکدا
+      } else {
+        document.body.classList.remove('dark-mode');
+        themeEmoji.innerText = '☀️';
+        themeText.innerText = 'دۆخی ڕووناک (Light Mode)';
+        wallpaperCard.style.display = 'block';
+      }
+    }
+
+    function changeBg(color, element) {
+      document.documentElement.style.setProperty('--bg-color', color);
+      
+      // Active borders
+      document.querySelectorAll('.color-box').forEach(box => box.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    function selectLanguage(lang, element) {
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
